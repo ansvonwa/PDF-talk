@@ -1,0 +1,134 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+
+
+
+
+
+\immediate\pdfobj{<<
+  /S/JavaScript/JS (
+  app.alert('Document open!');
+  click=function(arg){app.alert('Clicked button ' + arg);})
+>>}
+\edef\click{\the\pdflastobj\space 0 R}
+
+\pdfnames{
+  /JavaScript <<
+    %name tree mapping doc. level JavaScript functions to object numbers
+    /Names [(click) \click]
+    /Limits [(click) (click)] %first and last in alphab. order
+  >>
+}
+
+
+
+
+
+\begin{document}
+
+% buttons 1 to 3
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('1'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('2'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('3'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\hfill{}
+
+
+% buttons 4 to 6
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('4'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('5'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('6'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\hfill{}
+
+
+% buttons 7 to 9
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('7'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('8'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('9'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\hfill{}
+
+
+% buttons restart
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('restart'))
+    >>
+} restart! \pdfendlink
+\hfill{}
+
+
+\end{document}

@@ -1,0 +1,41 @@
+\documentclass[a4paper,10pt]{article}
+
+% see https://tex.stackexchange.com/questions/3080/what-is-the-best-way-to-insert-document-level-javascript-in-latex-documents
+
+\immediate\pdfobj{<<
+  /S/JavaScript/JS (someFunc=function(arg){app.alert('I say ' + arg);})
+>>}
+\edef\someFunc{\the\pdflastobj\space 0 R}
+
+\immediate\pdfobj{<<
+  /S/JavaScript/JS (otherFunc=function(arg){app.alert('You say ' + arg);})
+>>}
+\edef\otherFunc{\the\pdflastobj\space 0 R}
+
+\pdfnames{
+  /JavaScript <<
+    %name tree mapping doc. level JavaScript functions to object numbers
+    /Names [(someFunc) \someFunc (otherFunc) \otherFunc ]
+    /Limits [(otherFunc) (someFunc)] %first and last in alphab. order
+  >>
+}
+
+\begin{document}
+   \leavevmode
+   \pdfstartlink user {
+      /Subtype /Link
+      /A <<
+        /S/JavaScript
+        /JS (someFunc('Hello!'))
+      >>
+   }Hello!\pdfendlink
+
+   \leavevmode
+   \pdfstartlink user {
+      /Subtype /Link
+      /A <<
+        /S/JavaScript
+        /JS (otherFunc('Good bye!'))
+      >>
+   }Good bye!\pdfendlink
+\end{document}

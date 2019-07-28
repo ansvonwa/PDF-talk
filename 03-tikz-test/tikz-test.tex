@@ -1,0 +1,83 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+
+
+\immediate\pdfobj{<<
+  /S/JavaScript/JS (someFunc=function(arg){app.alert('I say ' + arg);})
+>>}
+\edef\someFunc{\the\pdflastobj\space 0 R}
+
+\immediate\pdfobj{<<
+  /S/JavaScript/JS (otherFunc=function(arg){app.alert('You say ' + arg);})
+>>}
+\edef\otherFunc{\the\pdflastobj\space 0 R}
+
+\pdfnames{
+  /JavaScript <<
+    %name tree mapping doc. level JavaScript functions to object numbers
+    /Names [(someFunc) \someFunc (otherFunc) \otherFunc ]
+    /Limits [(otherFunc) (someFunc)] %first and last in alphab. order
+  >>
+}
+
+
+
+\begin{document}
+\tikzset{
+    hyperlink node/.style={
+        alias=sourcenode,
+        append after command={
+            let     \p1 = (sourcenode.north west),
+                \p2=(sourcenode.south east),
+                \n1={\x2-\x1},
+                \n2={\y1-\y2} in
+            node [inner sep=0pt, outer sep=0pt,anchor=north west,at=(\p1)] {\pdfstartlink user {
+      /Subtype /Link
+      /A <<
+        /S/JavaScript
+        /JS (someFunc('Hello!'))
+      >>
+   }{\phantom{\rule{200pt}{200pt}}}\pdfendlink}
+                    %xelatex needs \XeTeXLinkBox, won't create a link unless it
+                    %finds text --- rules don't work without \XeTeXLinkBox.
+                    %Still builds correctly with pdflatex and lualatex
+        }
+    }
+}
+
+\tikz \node [hyperlink node=pagetwo] {\circle{170}};
+
+\leavevmode
+\pdfstartlink%
+% attr {/Border [0 0 0]}% disables border
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (someFunc(1))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (someFunc('2'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (someFunc('3'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+
+
+\clearpage
+\hypertarget{pagetwo}{Page Two}
+\end{document} 

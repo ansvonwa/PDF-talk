@@ -1,0 +1,3 @@
+qpdf --stream-data=uncompress --object-streams=disable --compress-streams=n --decode-level=generalized in.pdf out.pdf
+
+

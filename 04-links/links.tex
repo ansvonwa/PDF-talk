@@ -1,0 +1,60 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+
+
+
+
+
+\immediate\pdfobj{<<
+  /S/JavaScript/JS (someFunc=function(arg){app.alert('I say ' + arg);})
+>>}
+\edef\someFunc{\the\pdflastobj\space 0 R}
+
+\immediate\pdfobj{<<
+  /S/JavaScript/JS (otherFunc=function(arg){app.alert('You say ' + arg);})
+>>}
+\edef\otherFunc{\the\pdflastobj\space 0 R}
+
+\pdfnames{
+  /JavaScript <<
+    %name tree mapping doc. level JavaScript functions to object numbers
+    /Names [(someFunc) \someFunc (otherFunc) \otherFunc ]
+    /Limits [(otherFunc) (someFunc)] %first and last in alphab. order
+  >>
+}
+
+
+
+
+
+\begin{document}
+
+
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (someFunc(1))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (someFunc('2'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (someFunc('3'))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+
+\end{document}

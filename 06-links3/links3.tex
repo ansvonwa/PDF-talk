@@ -1,0 +1,213 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+
+
+
+\immediate\pdfobj{<<
+/S/JavaScript/JS (%
+content=["", "", "", "", "", "", "", "", ""];
+annots=[];
+rows=[123,456,789,147,258,369,159,357];%
+nextPlayer="X";
+winner="";
+click('restart');%
+draw=function(chr, pos) {
+    size=20;
+    x=(((pos-1)\%3)-1) * size + 595.276/2 + 7.8;
+    y= -(pos - ((pos-1)\%3))/3 * size + 711.8;
+    var symbSize = size/3;
+    if (chr == "X") {% draw X
+        var lines = [[[x-symbSize, y-symbSize], [x+symbSize, y+symbSize]], [[x+symbSize, y-symbSize], [x-symbSize, y+symbSize]]];
+    } else {% draw O
+        var lines = [new Array()];
+        var count = 10;
+        for (var i = 0; i <= count; i += 1) {
+            lines[0][i] = [x + symbSize*Math.cos(i/count*2*Math.PI), y + symbSize*Math.sin(i/count*2*Math.PI)];
+        };
+    };
+    annots[pos-1] = this.addAnnot({
+        type: "Ink",
+        page: 0,
+        name: chr,
+        gestures: lines,
+        strokeColor: color.red,
+        width: 1
+    });
+};%
+checkRows=function() {%
+    rows.forEach(function(r) {
+        if (content[r\%10-1] != "" &&
+            content[r\%10-1] == content[Math.floor(r/10)\%10-1] &&
+            content[r\%10-1] == content[Math.floor(r/100)\%10-1]) {%
+            console.println(r);
+            pos = r\%10;
+            x1=(((pos-1)\%3)-1) * size + 595.276/2 + 7.8;
+            y1= -(pos - ((pos-1)\%3))/3 * size + 711.8;
+            pos = Math.floor(r/100)\%10;
+            x2=(((pos-1)\%3)-1) * size + 595.276/2 + 7.8;
+            y2= -(pos - ((pos-1)\%3))/3 * size + 711.8;
+            annots[r] = this.addAnnot({
+                type: "Ink",
+                page: 0,
+                name: "winning row",
+                gestures: [[[x1, y1],[x2, y2]]],
+                strokeColor: color.blue,
+                width: 2
+            });
+            winner = content[r\%10-1];
+        }
+    });
+};%
+)>>}
+\edef\predef{\the\pdflastobj\space 0 R}
+
+
+\immediate\pdfobj{<<
+/S/JavaScript/JS (
+click=function(btn){
+%     console.println("button " + btn);
+    if (content[btn-1] == "" && winner == "") {
+        content[btn-1] = nextPlayer;
+        draw(nextPlayer, btn);
+        checkRows();
+        if (nextPlayer == "X") {%
+            nextPlayer="O";
+        } else {%
+            nextPlayer="X";
+        };
+    } else if (btn == 'restart') {
+        annots.forEach(function(a) {
+            try {
+                a.destroy();
+            } catch (ignore) {}
+        });
+        annots=[];
+        content=["", "", "", "", "", "", "", "", ""];
+        winner="";
+        nextPlayer="X";
+    }
+};
+)
+>>}
+\edef\click{\the\pdflastobj\space 0 R}
+
+\pdfnames{
+    /JavaScript <<
+        %name tree mapping doc. level JavaScript functions to object numbers
+        /Names [(click) \click (predef) \predef]
+        /Limits [(click) (predef)] %first and last in alphab. order
+    >>
+}
+
+
+
+
+
+\begin{document}
+
+% buttons 1 to 3
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(1))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(2))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(3))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\hfill{}
+
+
+% buttons 4 to 6
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(4))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(5))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(6))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\hfill{}
+
+
+% buttons 7 to 9
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(7))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(8))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click(9))
+    >>
+}\phantom{\rule{20pt}{20pt}}\pdfendlink
+\hfill{}
+
+
+% buttons restart
+\hfill{}
+\leavevmode
+\pdfstartlink%
+user {
+    /Subtype /Link
+    /A <<
+        /S/JavaScript
+        /JS (click('restart'))
+    >>
+} restart! \pdfendlink
+\hfill{}
+
+
+\end{document}
