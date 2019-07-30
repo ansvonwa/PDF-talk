@@ -1,0 +1,143 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage[pdfnewwindow=true]{hyperref}
+
+
+\IfFileExists{../PDF32000_2008.pdf}{\def\pdfspecfile{../PDF32000_2008.pdf}}{\def\pdfspecfile{https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf}}
+\newcommand\pdfref[2]{\href{\pdfspecfile\##1}{#2}}
+
+%opening
+\title{PDF Stuff}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Internal Structure}
+\subsection{\pdfref{G6.1877172}{In Order}}
+\begin{itemize}
+  \item Header
+  \begin{itemize}
+  \item \texttt{\%PDF-}version
+  \item {\color{gray}\texttt{\%}(at least 4 arbitrary bytes in $[128,255]$)}
+  \end{itemize}
+  \item Body
+  \begin{itemize}
+  \item \ldots objects \ldots
+  \item \texttt{17 0 obj\\\ldots\\endobj}
+  \end{itemize}
+  \item Cross-Reference Table
+  \begin{itemize}
+  \item \texttt{xref}
+  \item \ldots numbers \ldots
+  \end{itemize}
+  \item Trailer
+  \begin{itemize}
+  \item \texttt{<<\\
+  \ldots\quad\ldots\\
+  \ldots\quad\ldots\\
+  >>}
+  \item \texttt{startxref}
+  \item single number
+  \item \texttt{\%\%EOF}
+  \end{itemize}
+\end{itemize}
+
+% \pdfref{G11.2113697}{Javascript}
+% \href{\pdfspecfile}{Javascript}
+
+
+
+\newpage
+\subsection{\pdfref{G6.1953078}{Types}}
+PDF includes eight basic types of objects: Boolean values, Integer and Real numbers, Strings, Names, Arrays, Dictionaries, Streams, and the null object.
+
+\begin{itemize}
+  \item \textbf{Boolean}\\
+  \texttt{true} and \texttt{false}
+  \item \textbf{(Integer and Real) numbers}\\
+  \texttt{123}, \texttt{-1.234}, \ldots (but not \texttt{1e10})
+  \item \textbf{Strings}\\
+  \texttt{(this is a string)}\\
+  \texttt{<4E6F762073686D6F7A206B6120706F702E>}
+  \item \textbf{Names}\\
+  \texttt{/ThisIsAName}
+  \item \textbf{Arrays}\\
+  \texttt{[ 549  3.14  false  (  Ralph )   /SomeName ]}
+  \item \textbf{Dictionaries}\\
+  \texttt{<< /Key1 /Value1 /Key2 (key 2 refers to me) /TheAnswer 42 >>}
+  \item \textbf{Streams}\\
+  \texttt{<<} \ldots dictionary content \ldots \texttt{>>}\\
+  \texttt{stream}\\
+  \ldots zero or more bytes \ldots\\
+  \texttt{endstream}
+  \item \textbf{the null object}\\
+  \texttt{null}
+\end{itemize}
+
+\paragraph{References}
+\begin{itemize}
+  \item \textbf{indirect object}\\
+  \texttt{12 0 obj\\
+  (bla)
+  endobj}
+  \item \textbf{reference}\\
+  \texttt{12 0 R} is equivalent to \texttt{(bal)}
+\end{itemize}
+
+
+\newpage
+\subsection{\pdfref{G6.1846820}{Tree}}
+\begin{itemize}
+  \item \textbf{Trailer}\\
+  \texttt{<< /Info 2 0 R /Root 1 0 R /Size 11 }\ldots\texttt{ >>}
+  \begin{itemize}
+    \item \textbf{Info} meta foo
+    \item \textbf{Catalog} (=Root)\\
+    \texttt{1 0 obj\\
+    << /Pages 3 0 R /Type /Catalog >>\\
+    endobj}
+    \begin{itemize}
+      \item \ldots (optional document-level stuff)
+      \item \textbf{Pages tree}\\
+      \texttt{3 0 obj\\
+        << /Count 1 /Kids [ 4 0 R ] /Type /Pages >>\\
+        endobj}
+      \begin{itemize}
+        \item \textbf{Page 1}\\
+        \texttt{4 0 obj\\
+        << /Contents 5 0 R /MediaBox [ 0 0 595.276 841.89 ] /Parent 3 0 R /Resources 6 0 R /Type /Page >>\\
+        endobj}
+%         \begin{itemize}
+          \item \quad\textbf{Contents}\\
+          \texttt{5 0 obj\\
+            << /Length 93 >>\\
+            stream\\
+            BT\\
+            /F8 9.9626 Tf 139.746 706.129 Td [(Hallo)-333(W)83(elt)]TJ 154.421 -615.691\\ Td [(1)]TJ\\
+            ET\\
+            endstream\\
+            endobj}
+%         \end{itemize}
+
+      \end{itemize}
+
+    \end{itemize}
+
+  \end{itemize}
+
+\end{itemize}
+
+
+\newpage
+\section{References}
+
+PDF Specification: \href{https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf}{\url{https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf}}
+
+JavaScript in PDF: \href{https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf}{\url{https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf}}
+
+\end{document}
