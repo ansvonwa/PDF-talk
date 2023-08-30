@@ -1,0 +1,202 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+% \usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+% \usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{xcolor}
+\usepackage{bbding}
+\usepackage{lmodern}
+\usepackage{pdfcomment}
+% \usepackage{footnote}
+% \makesavenoteenv{tabular}
+\usepackage{amssymb}
+
+
+\newcommand{\y}{\Checkmark}
+\newcommand{\n}{\XSolidBrush}
+% \newcommand{\but}[1]{\pdfcomment[icon=Note,height=10pt]{#1}\hspace{10pt}}
+\newcommand{\but}[1]{\footnote{#1}}
+\newcommand{\ybut}[1]{\y\but{#1}}
+\newcommand{\nbut}[1]{\n\but{#1}}
+
+\renewcommand{\arraystretch}{1.5}
+
+%opening
+\title{PDF Features Test File}
+\author{Anselm von Wangenheim}
+
+\begin{document}
+
+\maketitle
+
+
+\section*{Links and more}
+
+
+\begin{longtable}{p{5.5cm}|llcccc}
+  type \hfill & \rotatebox{90}{Adobe Reader (wine)} & \rotatebox{90}{Okular} & \rotatebox{90}{Evince} & \rotatebox{90}{PDF.js (Firefox)} & \rotatebox{90}{Chromium (Browser)} \\
+  \hline
+  & \multicolumn{6}{c}{Linux} \\
+  \hline
+  
+  \href{https://www.google.com/}{link to \texttt{https://www.google.com/}} & \ybut{asks for permission (at least once)} & \y\\
+
+  \href{www.google.com}{link to \texttt{www.google.com}} & \ybut{asks for permission (at least once); prefers http over https} & \y\\
+  
+  \href{google.com}{link to \texttt{google.com}} & \nbut{tries to open current dir/google.com} & \nbut{tries to open current dir/google.com}\\
+
+  \href{https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf}{link to other pdf} & \ybut{opens in browser} & \ybut{opens with default application} \\
+
+  \href[pdfnewwindow=true]{https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf}{link to other pdf in new window} & \y & \y \\
+
+  \href{file}{link to file} & \ybut{appends ".pdf"} & \ybut{appends ".pdf"} \\
+
+  \href{file.pdf}{link to file.pdf} & \y & \y \\
+
+  \href{file.txt}{link to file.txt} & \ybut{shows "W" on hover as it does for links (for "web"?)} & \y \\
+
+  \href{file with spaces}{link to ``file with spaces''} & \ybut{appends ".pdf"} & \ybut{appends ".pdf"} \\
+
+  \href{script.sh}{link to script.sh} & \n & \y \\
+
+  \href{https://en.wikipedia.org/wiki/Anchor\_(disambiguation)\#Other\_uses}{link to \texttt{site.foo\#anchor}} & \y & \y \\
+
+%     \leavevmode
+%     \pdfstartlink%
+%     user {
+%         /Subtype /Link
+%         %/Dest [ 0  /XYZ 0 0 1000 ]
+%         /Dest [()]
+%     }zoom to position\pdfendlink \\
+
+  \hline
+%   \newpage
+  \textbf{Javascript} & \y & (\y)\but{the only possible action is filling out form fields} & \n & \n & \n \\
+  \hline
+  
+  \leavevmode
+    \pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S/JavaScript
+            /JS (app.alert('This is an alert. This means that JavaScript works!');)
+        >>
+    }run \texttt{app.alert()}\pdfendlink & \y & \y \\
+
+  \leavevmode
+    \pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S/JavaScript
+            /JS (console.println('JavaScript works!');)
+        >>
+    }print to console\pdfendlink & \y & \n \\
+
+  \leavevmode
+    \pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S/JavaScript
+            /JS (this.addAnnot({
+        type: "Ink",
+        page: \thepage,
+        name: "annotation name",
+        gestures: [[[140, 90], [130, 100], [130, 110], [130, 732], [130, 742], [140, 752]]],
+        strokeColor: color.red,
+        width: 1
+    });)
+        >>
+    }$\leftarrow$ draw ink annotation (red line)\pdfendlink & \y & \n \\
+
+    
+    \hline
+    \textbf{Launch Action}\\
+    \hline
+    
+    \leavevmode
+    \pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S /Launch
+            /F (script.sh)
+        >>
+    }launch \texttt{script.sh}\pdfendlink & \ybut{asks (once) for permission} & \nbut{Okular outputs a message that it ignores this action for security reasons. No option to skip the warning.} \\
+
+    \leavevmode
+    \pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S /Launch
+            /F (script.bat)
+        >>
+    }launch \texttt{script.bat}\pdfendlink & \nbut{"This is currently disallowed by your system administrator." ?!?} & (\n)\but{"Opens the file with default text viewer"} \\
+
+    \hline
+    \textbf{More Actions}\\
+    \hline
+    
+\immediate\pdfobj{<<
+    /Length 33580
+    /F (bird.wav)
+>>
+stream
+...
+endstream}%
+\edef\soundfile{\the\pdflastobj\space 0 R}%
+    \leavevmode%
+    \pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S /Sound
+            /Sound \soundfile
+        >>
+    }play \texttt{bird.wav} (bröken)\footnote{see \url{http://www.wavsource.com/animals/animals.htm}}\pdfendlink & \n & \n \\
+    
+    
+    \immediate\pdfcomment[icon=Note,height=10pt]{this annotation can be hidden}%
+    \edef\hidable{\the\pdflastobj\space 0 R}%
+    \leavevmode%
+    \qquad\quad\pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S /Hide
+            /T \hidable
+        >>
+    }hide\pdfendlink{}
+    or \pdfstartlink%
+    user {
+        /Subtype /Link
+        /A <<
+            /S /Hide
+            /T \hidable
+            /H false
+        >>
+    }show\pdfendlink{} an annotation
+    & \n & \n \\
+
+    \hline
+    
+    \textbf{Anim}\\
+    
+    \hline
+    
+    \immediate\pdfobj stream file {dot.svg} 
+\edef\soundfile{\the\pdflastobj\space 0 R}%
+  
+\end{longtable}
+
+\newpage
+page $n$
+
+bla
+
+\end{document}
